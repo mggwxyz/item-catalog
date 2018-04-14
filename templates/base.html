@@ -9,7 +9,7 @@
 <body>
     <nav class="navigation">
         {% block navigation %}
-            <span>Item Catalog</span>
+            <a class="navigation-brand" href="{{ url_for('index') }}">Item Catalog</a>
         {% endblock %}
     </nav>
     <main class="main">

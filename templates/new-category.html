@@ -1,11 +1,16 @@
 {% extends "base.html" %}
-{% block title %}{{category.name}}{% endblock %}
+{% block title %}New Category{% endblock %}
 {% block content %}
-    <h1>{{category.name}}</h1>
-    <div class="category-card">
-        <p class="category-card__name">{{category.name}}</p>
-        <p class="category-card__name">{{category.description}}</p>
-        <a href="{{ url_for('edit_category', category_id=category.id) }}">Edit</a>
-        <a href="{{ url_for('edit_category', category_id=category.id) }}">Delete</a>
-    </div>
+    <h1>New Category</h1>
+    <form class="category-form">
+        <div class="input-group">
+            <label class="input-label" for="category-name">Name</label>
+            <input id="category-name">
+        </div>
+        <div class="input-group">
+            <label class="input-label" for="category-description">Description</label>
+            <textarea id="category-description" rows="5"></textarea>
+        </div>
+        <button class="button">Create</button>
+    </form>
 {% endblock %}

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Welcome{% endblock %}
+{% block content %}
+    <h1>Welcome to the Item Catalog!</h1>
+    <p class="welcome-message">We hope that you enjoy your experience</p>
+    <a class="button">View Items</a>
+    <a class="button" href="{{ url_for('view_all_categories') }}">View Categories</a>
+{% endblock %}
+
+

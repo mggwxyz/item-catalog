@@ -14,8 +14,8 @@ session = Session()
 
 
 @APP.route("/")
-def hello():
-    return "Hello World!"
+def index():
+    return render_template('index.html')
 
 
 @APP.route("/categories")
@@ -24,32 +24,31 @@ def view_all_categories():
     return render_template('categories.html', categories=all_categories)
 
 
+@APP.route("/categories/new/")
+def create_new_category():
+    return render_template('new-category.html')
+
+
 @APP.route("/categories/<int:category_id>/")
 def view_category(category_id):
     results = session.query(Category).filter(Category.id == category_id)
     category = results.first()
-    return render_template('view-category.html', categories=all_categories)
-
-
-@APP.route("/categories/new/")
-def create_new_category():
-    output = 'Return create new category page...'
-    print(output)
-    return output
+    return render_template('view-category.html', category=category)
 
 
 @APP.route("/categories/<int:category_id>/edit/")
-def edit_category():
-    output = 'Return edit category page...'
-    print(output)
-    return output
+def edit_category(category_id):
+    results = session.query(Category).filter(Category.id == category_id)
+    category = results.first()
+    return render_template('edit-category.html', category=category)
 
 
 @APP.route("/categories/<int:category_id>/delete/")
 def delete_category():
-    output = 'Return delete category page...'
-    print(output)
-    return output
+    results = session.query(Category).filter(Category.id == category_id)
+    category = results.first()
+    return render_template('delete-category.html', category=category)
+
 
 if __name__ == '__main__':
     APP.debug = True
