@@ -10,10 +10,19 @@
     border: 0;
     padding: 0;
     box-sizing: border-box;
+    line-height: 1.4;
 }
 
 html, body {
     height: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 1rem 0;
+}
+
+a:hover, button:hover {
+    cursor: pointer;
 }
 
 .navigation {
@@ -42,6 +51,24 @@ html, body {
     max-width: 800px;
 }
 
+.button {
+    margin: 0 0.5rem 0 0;
+    padding: 1rem;
+    border: 2px solid #6457d8;
+   
+    color: #6457d8;
+    border-radius: 4px;
+    display: inline-block;
+    font-size: 1rem;
+    line-height: 1rem;
+    text-decoration: none;
+}
+
+.button:hover {
+    border: 2px solid #493ea8;
+    color: #493ea8;
+}
+
 .category-list {
     margin: 0;
     padding: 0;
@@ -56,6 +83,10 @@ html, body {
     border: 1px solid #e2e2e2;
     border-radius: 4px;
 
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
     transition-duration: 300ms;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -66,9 +97,27 @@ html, body {
 }
 
 .category-card__name {
+    font-size: 1.5rem;
+    text-transform: lowercase;
+    margin: 0 0 1rem 0;
+}
 
+.category-card__name::before {
+    content: '# '
 }
 
 .category-card__description {
     
+}
+
+.category-card__buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.category-card__add-button:before {
+    content: '\0002B  ';
+    font-size: 1.25rem;
 }

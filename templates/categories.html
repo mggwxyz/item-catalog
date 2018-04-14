@@ -2,14 +2,19 @@
 {% block title %}Categories{% endblock %}
 {% block content %}
     <h1>Categories</h1>
+    <button class="button category-card__add-button">Create New Category</button>
     <ul class="category-list">
         {% for category in categories %}
             <li>
                 <div class="category-card">
-                    <p class="category-card__name">{{category.name}}</p>
-                    <p class="category-card__name">{{category.description}}</p>
-                    <a href="{{ url_for('edit_category', category_id=category.id) }}">Edit</a>
-                    <a href="{{ url_for('edit_category', category_id=category.id) }}">Delete</a>
+                    <div class="category-card__info">
+                        <p class="category-card__name">{{category.name}}</p>
+                        <p class="category-card__description">{{category.description}}</p>
+                    </div>
+                    <div class="category-card__buttons">
+                        <a class="button" href="{{ url_for('edit_category', category_id=category.id) }}">Edit</a>
+                        <a class="button" href="{{ url_for('edit_category', category_id=category.id) }}">Delete</a>
+                    </div>
                 </div>
             </li>
         {% endfor %}

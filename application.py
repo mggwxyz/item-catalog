@@ -28,10 +28,7 @@ def view_all_categories():
 def view_category(category_id):
     results = session.query(Category).filter(Category.id == category_id)
     category = results.first()
-    print(category)
-    template = '<p>category: {}, description: {}</p><br>'
-    output = template.format(category.name, category.description)
-    return output
+    return render_template('view-category.html', categories=all_categories)
 
 
 @APP.route("/categories/new/")
