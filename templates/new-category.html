@@ -2,14 +2,14 @@
 {% block title %}New Category{% endblock %}
 {% block content %}
     <h1>New Category</h1>
-    <form class="category-form">
+    <form class="category-form" action="{{ url_for('create_new_category') }}" method="post">
         <div class="input-group">
             <label class="input-label" for="category-name">Name</label>
-            <input id="category-name">
+            <input id="category-name" type="text" name="name">
         </div>
         <div class="input-group">
             <label class="input-label" for="category-description">Description</label>
-            <textarea id="category-description" rows="5"></textarea>
+            <textarea id="category-description" name="description" rows="5"></textarea>
         </div>
         <button class="button">Create</button>
     </form>

@@ -2,7 +2,7 @@
 from sqlalchemy import create_engine, Integer, String, Column, ForeignKey
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request, redirect
 from database import Base, Item, Category
 
 APP = Flask(__name__, template_folder='./templates')
@@ -24,8 +24,18 @@ def view_all_categories():
     return render_template('categories.html', categories=all_categories)
 
 
-@APP.route("/categories/new/")
+@APP.route("/categories/new/", methods=['GET', 'POST'])
 def create_new_category():
+    if request.method == 'POST':
+        name = name = request.form['name']
+        description = request.form['description']
+        new_category = Category(name=name, description=description)
+        session.add(new_category)
+        session.flush()
+        new_category_id = new_category.id
+        print('new_category_id', new_category_id)
+        session.commit()
+        return redirect(url_for('view_category', category_id=new_category_id))
     return render_template('new-category.html')
 
 
@@ -43,8 +53,19 @@ def edit_category(category_id):
     return render_template('edit-category.html', category=category)
 
 
-@APP.route("/categories/<int:category_id>/delete/")
-def delete_category():
+@APP.route("/categories/<int:category_id>/delete/", methods=['GET', 'POST'])
+def delete_category(category_id):
+    if request.method == 'POST':
+        if 'yes' in request.form:
+            print('yes')
+            results = session.query(Category).filter(Category.id == category_id)
+            category = results.first()
+            session.delete(category)
+            session.commit()
+            return redirect(url_for('view_all_categories'))
+        else:
+            print('no')
+            return redirect(url_for('view_category', category_id=category_id))
     results = session.query(Category).filter(Category.id == category_id)
     category = results.first()
     return render_template('delete-category.html', category=category)

@@ -2,16 +2,16 @@
 {% block title %}Edit {{category.name}}{% endblock %}
 {% block content %}
     <h1>Edit {{category.name}}</h1>
-    <div class="category-card">
-        <div class="category-card__info">
-            <a  href="{{ url_for('view_category', category_id=category.id) }}">
-                <p class="category-card__name">{{category.name}}</p>
-            </a>
-            <p class="category-card__description">{{category.description}}</p>
+    <form class="category-form" action="{{ url_for('create_new_category') }}" method="post">
+        <div class="input-group">
+            <label class="input-label" for="category-name">Name</label>
+            <input id="category-name" type="text" name="name" value="{{category.name}}">
         </div>
-        <div class="category-card__buttons">
-            <a class="button" href="{{ url_for('edit_category', category_id=category.id) }}">Edit</a>
-            <a class="button" href="{{ url_for('edit_category', category_id=category.id) }}">Delete</a>
+        <div class="input-group">
+            <label class="input-label" for="category-description">Description</label>
+            <textarea id="category-description" name="description" rows="5" value="{{category.description}}">{{category.description}}</textarea>
         </div>
-    </div>
+        <input class="button" type="submit" name="update" value="Update">
+        <input class="button" type="reset" name="reset" value="Reset">
+    </form>
 {% endblock %}

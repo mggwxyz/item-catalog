@@ -21,7 +21,9 @@ h1, h2, h3, h4, h5, h6 {
     margin: 1rem 0;
 }
 
-a:hover, button:hover {
+a:hover,
+button:hover,
+input[type='submit'] {
     cursor: pointer;
 }
 
@@ -29,7 +31,7 @@ a {
     text-decoration: none;
 }
 
-input, textarea {
+input[type='text'], textarea {
     width: 100%;
     padding: 0.5rem;
 }
@@ -135,7 +137,7 @@ textarea {
 }
 
 .category-card__description {
-    
+    font-size: 1rem;
 }
 
 .category-card__buttons {
@@ -151,9 +153,15 @@ textarea {
 }
 
 .category-form {
+    width: 100%;
 }
 
 .input-group {
     margin: 0 0 1rem 0;
     width: 100%;
+}
+
+.delete-category-message {
+    padding: 1rem 0;
+    margin: 1rem 0;
 }
