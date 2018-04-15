@@ -15,6 +15,16 @@ class Category(Base):
     description = Column(String(250), nullable=True)
 
 
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description
+        }
+
+
 class Item(Base):
 
     __tablename__ = 'item'
@@ -24,6 +34,15 @@ class Item(Base):
     description = Column(String(250), nullable=True)
     category_id = Column(Integer, ForeignKey('category.id'))
     category = relationship(Category)
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description
+        }
 
 # Create engine and session required for querying
 engine = create_engine('sqlite:///item_catalog.db', convert_unicode=True)
@@ -45,7 +64,9 @@ def insert_categories():
     session.commit()
 
 
-# Insert initial values into items table
+'''
+Inserts initial values into items table
+'''
 def insert_items():
     print('Inserting items...')
 
