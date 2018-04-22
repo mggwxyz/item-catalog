@@ -6,6 +6,26 @@ Base = declarative_base()
 
 
 # ORM classes
+class User(Base):
+
+    __tablename__ = 'users'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    email = Column(String(250), nullable=False)
+    picture = Column(String(250))
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'id': self.id,
+            'name': self.name,
+            'email': self.email,
+            'picture': self.picture
+        }
+
+
 class Category(Base):
 
     __tablename__ = 'category'
@@ -13,7 +33,7 @@ class Category(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
     description = Column(String(250), nullable=True)
-
+    user = relationship(User)
 
     @property
     def serialize(self):
@@ -34,6 +54,7 @@ class Item(Base):
     description = Column(String(250), nullable=True)
     category_id = Column(Integer, ForeignKey('category.id'))
     category = relationship(Category)
+    user = relationship(User)
 
     @property
     def serialize(self):
@@ -43,6 +64,7 @@ class Item(Base):
             'name': self.name,
             'description': self.description
         }
+
 
 # Create engine and session required for querying
 engine = create_engine('sqlite:///item_catalog.db', convert_unicode=True)
@@ -64,9 +86,7 @@ def insert_categories():
     session.commit()
 
 
-'''
-Inserts initial values into items table
-'''
+# Inserts initial values into items table
 def insert_items():
     print('Inserting items...')
 
