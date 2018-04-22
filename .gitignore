@@ -6,4 +6,5 @@ forum/
 tournament/
 .idea/
 client_secrets.json
+fb_client_secrets.json
 
