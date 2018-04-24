@@ -39,6 +39,7 @@ db.create_all()
 def not_found(error):
     return render_template('404.html'), 404
 
+
 @app.route("/")
 @app.route("/welcome")
 def index():
