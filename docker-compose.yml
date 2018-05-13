@@ -1,0 +1,28 @@
+version: '3'
+services:
+  # PostgreSQL service
+  postgres:
+    # Use postgres version 10 image
+    image: postgres:10
+    # Set environment variables used by the service. Configure db user, password, and name
+    environment:
+      - POSTGRES_USER=testuser
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=item-catalog
+    # Setup volume so container uses host's directory
+    volumes:
+      - ./postgres-data/postgres:/var/lib/postgresql/data
+    # Expose container port 5432 on host
+    ports:
+      - "5432:5432"
+  # Item Catalog Flask App
+  app:
+    # Define build parameters
+    build: ./item-catalog
+    ports:
+     - "8000:8000"
+    volumes:
+      - ./item-catalog:/app
+    depends_on:
+      - postgres
+    entrypoint: ['python', 'run.py']

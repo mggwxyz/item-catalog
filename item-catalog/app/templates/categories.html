@@ -9,7 +9,7 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    <a class="button category-card__add-button" href="{{ url_for('create_new_category') }}">Create New Category</a>
+    <a class="button category-card__add-button" href="{{ url_for('categories.create_new_category') }}">Create New Category</a>
     <ul class="category-list">
         {% for category in categories %}
             <li>
