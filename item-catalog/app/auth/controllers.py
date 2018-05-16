@@ -1,15 +1,16 @@
 # Import flask dependencies
 from flask import Blueprint, Flask, render_template, url_for, \
     request, redirect, flash, jsonify, session as login_session, make_response
+# Import OAuth dependencies
+from oauth2client.client import flow_from_clientsecrets
+from oauth2client.client import FlowExchangeError
 
+# Import utility dependencies
 import random
 import json
 import string as string
 import httplib2
 import requests
-
-from oauth2client.client import flow_from_clientsecrets
-from oauth2client.client import FlowExchangeError
 
 # Import the database object from the main app module
 from app import db, CLIENT_ID
@@ -19,7 +20,6 @@ from app.auth.models import User
 
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
 auth = Blueprint('auth', __name__)
-
 
 @auth.route('/login')
 def show_login():

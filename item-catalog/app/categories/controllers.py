@@ -5,7 +5,6 @@ from app.categories.models import Category
 
 categories = Blueprint('categories', __name__)
 
-
 @categories.route("/categories")
 def view_all():
     all_categories = db.session.query(Category)
