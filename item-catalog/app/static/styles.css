@@ -172,7 +172,7 @@ textarea {
 }
 
 .welcome-message {
-    margin: 0;
+    margin: 1rem 0;
     padding: 1rem;
     width: 100%;
     border-radius: 4px;
