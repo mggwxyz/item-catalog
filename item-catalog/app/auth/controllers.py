@@ -21,6 +21,7 @@ from app.auth.models import User
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
 auth = Blueprint('auth', __name__)
 
+# Create a anti-forgery state token
 @auth.route('/login')
 def show_login():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
