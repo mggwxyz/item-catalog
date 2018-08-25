@@ -96,7 +96,7 @@
         console.log(element.id);
         auth2.attachClickHandler(element, {},
             function(googleUser) {
-                alert( "Signed in: " + googleUser.getBasicProfile().getName());
+                // alert( "Signed in: " + googleUser.getBasicProfile().getName());
                 var idToken = googleUser.getAuthResponse().id_token;
                 document.getElementById('google-sign-in-button').style.display = 'none';
                 fetch('/gconnect?state={{ STATE }}', {

@@ -1,7 +1,6 @@
 # Import flask dependencies
 from flask import Blueprint, Flask, render_template, url_for, \
     request, redirect, flash, jsonify, session as login_session, make_response
-# Import OAuth dependencies
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 
@@ -32,6 +31,7 @@ def show_login():
 
 @auth.route('/gconnect', methods=['POST'])
 def gconnect():
+
     # Validate the state token
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter'), 401)
