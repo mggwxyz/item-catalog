@@ -1,7 +1,7 @@
 # Setup debugger
-from mydebugger import Debugger, DebuggerClient
-from config import REMOTE_DEBUG_SERVER_HOST, REMOTE_DEBUG_SERVER_PORT
-Debugger.set_debugger_client(DebuggerClient(REMOTE_DEBUG_SERVER_HOST, REMOTE_DEBUG_SERVER_PORT))
+# from mydebugger import Debugger, DebuggerClient
+# from config import REMOTE_DEBUG_SERVER_HOST, REMOTE_DEBUG_SERVER_PORT
+# Debugger.set_debugger_client(DebuggerClient(REMOTE_DEBUG_SERVER_HOST, REMOTE_DEBUG_SERVER_PORT))
 
 # Run a development server
 from app import app

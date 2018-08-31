@@ -8,58 +8,11 @@
 
 {% block content %}
 
-
-<!-- GOOGLE PLUS SIGN IN-->
-
-
-<!--<div id="signinButton">-->
-          <!--<span class="g-signin"-->
-                <!--data-scope="openid email"-->
-                <!--data-clientid="474098323200-24mip8hl5v2idc5200nf0pmtbca9bmqh.apps.googleusercontent.com"-->
-                <!--data-redirecturi="postmessage"-->
-                <!--data-accesstype="offline"-->
-                <!--data-cookiepolicy="single_host_origin"-->
-                <!--data-callback="signInCallback"-->
-                <!--data-approvalprompt="force">-->
-          <!--</span>-->
-<!--</div>-->
-
+<!-- Login Result -->
 <div id="result"></div>
 
-<!--<script>-->
-    <!--function signInCallback(authResult) {-->
-        <!--console.log('authResult', authResult);-->
-        <!--if (authResult['code']) {-->
-            <!--// Hide the sign-in button now that the user is authorized-->
-            <!--$('#signinButton').attr('style', 'display: none');-->
-            <!--// Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page-->
-            <!--$.ajax({-->
-                <!--type: 'POST',-->
-                <!--url: '/gconnect?state={{STATE}}',-->
-                <!--processData: false,-->
-                <!--data: authResult['code'],-->
-                <!--contentType: 'application/octet-stream; charset=utf-8',-->
-                <!--success: function(result) {-->
-                    <!--// Handle or verify the server response if necessary.-->
-                    <!--if (result) {-->
-                        <!--$('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')-->
-                        <!--setTimeout(function() {-->
-                            <!--window.location.href = "/restaurant";-->
-                        <!--}, 4000);-->
-
-                    <!--} else if (authResult['error']) {-->
-                        <!--console.log('There was an error: ' + authResult['error']);-->
-                    <!--} else {-->
-                        <!--$('#result').html('Failed to make a server-side call. Check your configuration and console.');-->
-                    <!--}-->
-                <!--}-->
-
-            <!--}); } }-->
-<!--</script>-->
-
-
-
-<!--END GOOGLE PLUS SIGN IN -->
+<!-- Login Buttons -->
+<div id="login-buttons">
 <!-- Google Sign In Button -->
 <button id="google-sign-in-button" class="sign-in-card">
     <span class="sign-in-text">Sign in with Google</span>
@@ -75,7 +28,6 @@
         </g>
     </svg>
 </button>
-
 <script>
     var googleUser = {};
     setupGoogleLogin();
@@ -137,7 +89,6 @@
     </svg>
 </button>
 <script>
-
     // Load the Facebook SDK asynchronously
     (function (d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
@@ -156,37 +107,72 @@
             xfbml: true, // parse social plugins on this page
             version: 'v2.8' // use version 2.8
         });
-
+		
+        // TODO
         // Check user session and refresh it
-        FB.getLoginStatus(function(response) {
-            if (response.status === 'connected') {
-                // User is authorized
-                document.getElementById('facebook-sign-in-button').style.display = 'none';
-                getUserData();
-            } else {
-                // User is not authorized
-                alert('you are not authorized');
-            }
-        });
+        // FB.getLoginStatus(function(response) {
+        //     if (response.status === 'connected') {
+        //         // User is authorized
+        //         // document.getElementById('facebook-sign-in-button').style.display = 'none';
+        //         // getUserData();
+	    //         goToDashboard();
+        //     } else {
+        //         // User is not authorized
+        //         alert('you are not authorized');
+        //     }
+        // });
     };
 
     // Add event listener to facebook sign in button
     document.getElementById('facebook-sign-in-button').addEventListener('click', function(){
         // Perform sign in
-        FB.login(function(){
+        FB.login(function(response){
             if(response.authResponse){
                 // User authorized app
-                document.getElementById('facebook-sign-in-button').style.display = 'none';
-                getUserData();
+	            // goToDashboard();
+                // getUserData();
+	            var accessToken = response.authResponse.accessToken;
+	            fetch('/fbconnect?state={{ STATE }}', {
+		            method: 'POST',
+		            body: accessToken,
+		            headers: {
+			            'content-type': 'text/html'
+		            }
+	            })
+	            .then(function(response){
+	            	loginSuccessful();
+	            })
+	            .catch(function(response){
+	                console.log('Error response', response);
+	                alert('uh oh something went wrong');
+	            });
+	            
             }
         }, {scope: 'email, public_profile', return_scopes: true});
     });
 
     function getUserData(){
         FB.api('/me', function(response){
-           alert('Signed In: ' + response.name);
+           console.log('Signed In: ' + response.name);
         });
     }
+    
+    function loginSuccessful(){
+    	// Hide the login buttons
+    	var loginButtons = document.getElementById('login-buttons');
+    	loginButtons.classList.add('hidden');
+    	
+    	// Show success message
+        var resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = "<h2>Login was successful!</h2><br><h3>Redirecting...</h3>";
+        
+        setTimeout(function(){
+		    window.location.href = '/dashboard';
+	    }, 1000);
+    }
+    
+    
 </script>
+</div>
 
 {% endblock %}

@@ -5,9 +5,15 @@ import json
 from time import sleep
 # Import SQLAlchemy
 from flask_sqlalchemy import SQLAlchemy
+import os
+
+# import pydevd
+# pydevd.settrace('192.168.1.4', port=4444, stdoutToServer=True, stderrToServer=True)
 
 db = SQLAlchemy()
-CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
+SECRETS_PATH = os.path.abspath(__file__ + '/../../') + '/'
+CLIENT_ID = json.loads(open(SECRETS_PATH + 'client_secrets.json', 'r').read())['web']['client_id']
+FB_APP_ID = json.loads(open(SECRETS_PATH + 'fb_client_secrets.json', 'r').read())['web']['app_id']
 
 def initialize_app(script_info=None):
     # Define the WSGI application object

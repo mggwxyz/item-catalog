@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Items{% endblock %}
+{% block content %}
+<h1>User Dashboard</h1>
+<a class="button">View Items</a>
+<a class="button" href="{{ url_for('categories.view_all') }}">View Categories</a>
+{% endblock %}

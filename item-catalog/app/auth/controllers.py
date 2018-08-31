@@ -12,7 +12,7 @@ import httplib2
 import requests
 
 # Import the database object from the main app module
-from app import db, CLIENT_ID
+from app import db, CLIENT_ID, SECRETS_PATH
 
 # Import module models (i.e. User)
 from app.auth.models import User
@@ -43,7 +43,7 @@ def gconnect():
 
     try:
         # Upgrade authorization code into credentials object
-        oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
+        oauth_flow = flow_from_clientsecrets(SECRETS_PATH + 'client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
@@ -114,6 +114,7 @@ def gconnect():
         user_id = createUser(login_session)
     login_session['user_id'] = user_id
 
+    # return redirect(url_for('dashboard'))
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']
@@ -121,9 +122,9 @@ def gconnect():
     output += '<img src="'
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-    flash("you are now logged in as %s" % login_session['username'])
-    print("done!")
     return output
+    # flash("you are now logged in as %s" % login_session['username'])
+    # print("done!")
 
 
 @auth.route('/gdisconnect')
@@ -158,7 +159,6 @@ def gdisconnect():
         del(login_session['username'])
         del(login_session['email'])
         del(login_session['picture'])
-
         # Return response indicating successful disconnect
         response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
@@ -180,10 +180,10 @@ def fbconnect():
     access_token = request.data
     print("access token received %s " % access_token)
 
-    app_id = json.loads(open('fb_client_secrets.json', 'r').read())[
+    app_id = json.loads(open(SECRETS_PATH + 'fb_client_secrets.json', 'r').read())[
         'web']['app_id']
     app_secret = json.loads(
-        open('fb_client_secrets.json', 'r').read())['web']['app_secret']
+        open(SECRETS_PATH + 'fb_client_secrets.json', 'r').read())['web']['app_secret']
     url = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s' % (
         app_id, app_secret, access_token)
     h = httplib2.Http()
@@ -236,9 +236,11 @@ def fbconnect():
     output += '<img src="'
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-
-    flash("Now logged in as %s" % login_session['username'])
     return output
+    #
+    # flash("Now logged in as %s" % login_session['username'])
+    # flash('redirecting');
+    # return redirect({ url_for('dashboard')})
 
 
 @auth.route('/fbdisconnect')
@@ -269,10 +271,10 @@ def disconnect():
         del(login_session['user_id'])
         del(login_session['provider'])
         flash("You have successfully been logged out.")
-        return redirect(url_for('showRestaurants'))
+        return redirect(url_for('login'))
     else:
         flash("You were not logged in")
-        return redirect(url_for('showRestaurants'))
+        return redirect(url_for('login'))
 
 
 def createUser(login_session):
@@ -295,3 +297,5 @@ def getUserID(email):
         return user.id
     except:
         return None
+
+

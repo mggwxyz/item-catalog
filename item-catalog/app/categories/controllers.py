@@ -1,9 +1,13 @@
-from flask import Blueprint, session as login_session, render_template, redirect
+from flask import Blueprint, session as login_session, render_template, redirect, request, flash, url_for
 import json
+from app.auth.util import check_login
 from app import db
 from app.categories.models import Category
+from sqlalchemy import MetaData
 
 categories = Blueprint('categories', __name__)
+
+categories_table = db.Table('category', db.metadata)
 
 @categories.route("/categories")
 def view_all():
@@ -14,18 +18,17 @@ def view_all():
 @categories.route("/api/categories")
 def view_all_api():
     all_categories = db.session.query(Category)
-    return jsonify(categories=[i.serialize for i in all_categories])
+    return json(categories=[i.serialize for i in all_categories])
 
 
 @categories.route("/categories/new/", methods=['GET', 'POST'])
 def create_new_category():
-    if 'username' not in login_session:
-        return redirect('/login')
+    #check_login()
     if request.method == 'POST':
         name = name = request.form['name']
         description = request.form['description']
         new_category = Category(name=name, description=description)
-        db.session.add(new_category)
+        db.session.update(new_category)
         db.session.flush()
         db.session.commit()
         flash('New category #' + name + ' was created')
@@ -47,8 +50,18 @@ def view_category_api(category_id):
     return jsonify(category=category.serialize)
 
 
-@categories.route("/categories/<int:category_id>/edit/")
+@categories.route("/categories/<int:category_id>/edit/",  methods=['GET', 'POST'])
 def edit_category(category_id):
+    if request.method == 'POST':
+        name = name = request.form['name']
+        description = request.form['description']
+        db.session.execute( categories_table.update()
+                            .where(categories_table.c.id == category_id)
+                            .values(name=name, description=description))
+        db.session.flush()
+        db.session.commit()
+        flash('Category #' + name + ' was updated')
+        return redirect(url_for('categories.view_all'))
     results = db.session.query(Category).filter(Category.id == category_id)
     category = results.first()
     return render_template('edit-category.html', category=category)
