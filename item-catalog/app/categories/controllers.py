@@ -3,7 +3,6 @@ import json
 from app.auth.util import check_login
 from app import db
 from app.categories.models import Category
-from sqlalchemy import MetaData
 
 categories = Blueprint('categories', __name__)
 
@@ -28,7 +27,7 @@ def create_new_category():
         name = name = request.form['name']
         description = request.form['description']
         new_category = Category(name=name, description=description)
-        db.session.update(new_category)
+        db.session.add(new_category)
         db.session.flush()
         db.session.commit()
         flash('New category #' + name + ' was created')
