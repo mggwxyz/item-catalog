@@ -15,4 +15,4 @@ def index():
 
 @main.route("/dashboard")
 def dashboard():
-    return render_template('dashboard.html')
+    return render_template('dashboard.html', login_session=login_session)

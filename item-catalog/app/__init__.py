@@ -13,6 +13,7 @@ import os
 db = SQLAlchemy()
 SECRETS_PATH = os.path.abspath(__file__ + '/../../') + '/'
 CLIENT_ID = json.loads(open(SECRETS_PATH + 'client_secrets.json', 'r').read())['web']['client_id']
+print(CLIENT_ID)
 FB_APP_ID = json.loads(open(SECRETS_PATH + 'fb_client_secrets.json', 'r').read())['web']['app_id']
 
 def initialize_app(script_info=None):

@@ -29,54 +29,106 @@
     </svg>
 </button>
 <script>
-    var googleUser = {};
-    setupGoogleLogin();
-    function setupGoogleLogin() {
-        gapi.load('auth2', function(){
-            // Retrieve the singleton for the GoogleAuth library and set up the client.
-            auth2 = gapi.auth2.init({
-                client_id: '474098323200-24mip8hl5v2idc5200nf0pmtbca9bmqh.apps.googleusercontent.com',
-                cookiepolicy: 'single_host_origin',
-                // Request scopes in addition to 'profile' and 'email'
-                //scope: 'additional_scope'
-            });
-            attachSignin(document.getElementById('google-sign-in-button'));
-        });
+	var googleAuth = {};
+	// var googleUser = {};
+	
+	document.addEventListener('DOMContentLoaded', loadGoogleAuth);
+
+    
+    function loadGoogleAuth() {
+	    // var googleSignInButton = document.getElementById('google-sign-in-button');
+        gapi.load('auth2', initGoogleAuth);
+    }
+    
+    function initGoogleAuth(){
+	    // Retrieve the singleton for the GoogleAuth library and set up the client.
+	    googleAuth = gapi.auth2.init({
+		    client_id: '474098323200-24mip8hl5v2idc5200nf0pmtbca9bmqh.apps.googleusercontent.com',
+		    cookiepolicy: 'single_host_origin',
+		    scope: 'openid email',
+		    access_type: 'offline',
+		    // ux_mode: 'redirect',
+		    // redirect_uri: 'postmessage',
+		    prompt: 'consent'
+		    // Request scopes in addition to 'profile' and 'email'
+		    //scope: 'additional_scope'
+	    });
+	    googleAuth.then(function(foo){
+	    	console.log('something', foo);
+	    	// setTimeout(function(){
+	    	// 	console.log({googleAuth});
+		    // },5000)
+		    var googleSignInButton = document.getElementById('google-sign-in-button');
+		    googleAuth.attachClickHandler(googleSignInButton, {}, onLoginSuccess, onFailure);
+	    });
+	    // var googleSignInButton = document.getElementById('google-sign-in-button');
+	    // googleAuth.attachClickHandler(googleSignInButton, {}, onLoginSuccess, onFailure);
+	    // Attach click handler to login to google after user clicks button
+	    // document.getElementById('google-sign-it-button')
+	    //         .addEventListener('click',);
+	    
+	    // attachSignin(document.getElementById('google-sign-in-button'));
+	    
     }
 
     function attachSignin(element) {
-        console.log(element.id);
-        auth2.attachClickHandler(element, {},
-            function(googleUser) {
-                // alert( "Signed in: " + googleUser.getBasicProfile().getName());
-                var idToken = googleUser.getAuthResponse().id_token;
-                document.getElementById('google-sign-in-button').style.display = 'none';
-                fetch('/gconnect?state={{ STATE }}', {
-                    method: 'POST',
-                    body: JSON.stringify(googleUser),
-                    headers: {
-                        'content-type': 'text/html'
-                    }
-                })
-                .then(function(response){
-                    console.log('response');
-                // Handle or verify the server response if necessary.
-                    if (response) {
-                        document.getElementById('result').innerHTML = 'Login Successful!</br>'+ response + '</br>Redirecting...';
-                        setTimeout(function() {
-                            window.location.href = "/welcome";
-                        }, 4000);
-                    } else {
-                        document.getElementById('result').innerHTML = 'Failed to make a server-side call. Check your configuration and console.';
-                    }
-                })
-                .catch(function(error){
-                    console.log('error occurred', error);
-                });
-            }, function(error) {
-                alert(JSON.stringify(error, undefined, 2));
-            });
+        googleAuth.attachClickHandler(element, {}, onLoginSuccess, onFailure);
     }
+    
+    function onLoginSuccess(googleUser){
+	    // alert( "Signed in: " + googleUser.getBasicProfile().getName());
+	    var idToken = googleUser.getAuthResponse().id_token;
+	    var code = googleUser.getAuthResponse().code;
+	    var authResponse = googleUser.getAuthResponse();
+	    console.log({googleUser, idToken, authResponse});
+	    // document.getElementById('google-sign-in-button').style.display = 'none';
+	    // fetch('/gconnect?state={{ STATE }}', {
+	    //     method: 'POST',
+	    //     body: JSON.stringify(idToken),
+	    // })
+	
+	    // var xhr = new XMLHttpRequest();
+	    // xhr.open('POST', 'https://localhost:8000/gconnect');
+	    // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	    // xhr.onload = function() {
+		//     console.log('Signed in as: ' + xhr.responseText);
+	    // };
+	    // xhr.send('idtoken=' + id_token);
+	    
+	    var formData = new FormData();
+	    formData.set('idToken', idToken);
+	    
+	    axios({
+		    method: 'post',
+		    url: 'https://localhost:8000/gconnect',
+		    headers:{
+		    	'Content-Type': 'application/x-www-form-urlencoded'
+		    },
+		    data: formData,
+		    params: {
+			    state: '{{ STATE }}'
+		    }
+	    })
+	    .then(function(response){
+		    console.log('response');
+		    // Handle or verify the server response if necessary.
+		    if (response) {
+			    document.getElementById('result').innerHTML = 'Login Successful!</br>'+ response + '</br>Redirecting...';
+			    setTimeout(function() {
+				    window.location.href = "/dashboard";
+			    }, 4000);
+		    } else {
+			    document.getElementById('result').innerHTML = 'Failed to make a server-side call. Check your configuration and console.';
+		    }
+	    })
+	    .catch(onFailure);
+    
+    }
+	
+	function onFailure(error){
+		alert('Uh oh! Someting went wrong!\n ' + JSON.stringify(error, undefined, 2));
+	}
+	
 </script>
 
 <!-- Facebook Sign In Button -->
@@ -132,11 +184,19 @@
 	            // goToDashboard();
                 // getUserData();
 	            var accessToken = response.authResponse.accessToken;
-	            fetch('/fbconnect?state={{ STATE }}', {
-		            method: 'POST',
-		            body: accessToken,
-		            headers: {
-			            'content-type': 'text/html'
+	            // fetch('/fbconnect?state={{ STATE }}', {
+		        //     method: 'POST',
+		        //     body: accessToken,
+		        //     headers: {
+			    //         'content-type': 'text/html'
+		        //     }
+	            // })
+	            axios({
+		            method: 'post',
+		            url: '/fbconnect',
+		            data: JSON.stringify(accessToken),
+		            params: {
+		            	state: '{{ STATE }}'
 		            }
 	            })
 	            .then(function(response){

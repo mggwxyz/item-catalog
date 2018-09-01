@@ -2,6 +2,12 @@
 {% block title %}Items{% endblock %}
 {% block content %}
 <h1>User Dashboard</h1>
-<a class="button">View Items</a>
-<a class="button" href="{{ url_for('categories.view_all') }}">View Categories</a>
+<h2>{{ login_session['name'] }}</h2>
+<h2>{{ login_session['email'] }}</h2>
+<img src="{{ login_session['picture'] }}"/>
+<div>
+	<a class="button">View Items</a>
+	<a class="button" href="{{ url_for('categories.view_all') }}">View Categories</a>
+</div>
+
 {% endblock %}
