@@ -18,7 +18,7 @@ import requests
 from app import db, CLIENT_ID, SECRETS_PATH
 
 # Import module models (i.e. User)
-from app.auth.models import User
+# from app.auth.models import User
 
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
 auth = Blueprint('auth', __name__)

@@ -11,9 +11,10 @@ import os
 # pydevd.settrace('192.168.1.4', port=4444, stdoutToServer=True, stderrToServer=True)
 
 db = SQLAlchemy()
+
 SECRETS_PATH = os.path.abspath(__file__ + '/../../') + '/'
 CLIENT_ID = json.loads(open(SECRETS_PATH + 'client_secrets.json', 'r').read())['web']['client_id']
-print(CLIENT_ID)
+# print(CLIENT_ID)
 FB_APP_ID = json.loads(open(SECRETS_PATH + 'fb_client_secrets.json', 'r').read())['web']['app_id']
 
 def initialize_app(script_info=None):
@@ -25,7 +26,11 @@ def initialize_app(script_info=None):
 
     # Define the database object which is imported
     # by modules and controllers
-    db.init_app(app)
+    with app.app_context():
+        db.init_app(app)
+        db.drop_all()
+        db.create_all()
+        db.session.commit()
 
     # Import a module / component using its blueprint handler variable (auth)
     from app.auth.controllers import auth

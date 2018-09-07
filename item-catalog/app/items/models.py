@@ -2,9 +2,9 @@ from app.models import Base
 from app import db
 
 
-class Category(Base):
+class Item(Base):
 
-    __tablename__ = 'category'
+    __tablename__ = 'item'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
