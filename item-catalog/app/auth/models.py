@@ -1,4 +1,4 @@
-from passlib.apps import custom_app_context as pwd_context
+# from passlib.apps import custom_app_context as pwd_context
 
 # Import the database object (db) from the main application module
 # We will define this inside /app/__init__.py in the next sections.
@@ -9,7 +9,7 @@ from app.models import Base
 # Define a User model
 class UserProfile(Base):
 
-    __tablename__ = 'user_profiles'
+    __tablename__ = 'user_profile'
 
     id = db.Column(db.Integer, primary_key=True)
     # username = db.Column(db.String(32), index=True)
@@ -19,7 +19,8 @@ class UserProfile(Base):
     name = db.Column(db.String(250), nullable=False)
     email = db.Column(db.String(250), nullable=False)
     picture = db.Column(db.String(250))
-    categories = db.relationship('category', back_ref='user_profile', lazy=True)
+    categories = db.relationship('category', backref=db.backref('user_profile', lazy=True))
+    items = db.relationship('item', backref=db.backref('user_profile'), lazy=True)
 
     # New instance instantiation procedure
     def __init__(self, google_id, facebook_id, name, email, picture):

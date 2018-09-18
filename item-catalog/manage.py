@@ -4,17 +4,17 @@ from flask.cli import FlaskGroup
 
 from app import initialize_app, db
 
-app = initialize_app()
-cli = FlaskGroup(create_app=initialize_app)
+# app = initialize_app()
+# cli = FlaskGroup(create_app=initialize_app)
 
 
-@cli.command()
-def recreate_db():
-    print('dropping db')
-    db.drop_all()
-    db.create_all()
-    db.session.commit()
-    print('recreated db')
+# @cli.command()
+# def recreate_db():
+#     print('dropping db')
+#     db.drop_all()
+#     db.create_all()
+#     db.session.commit()
+#     print('recreated db')
 
 # @cli.command()
 # def seed_db():

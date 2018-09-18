@@ -4,9 +4,7 @@
 # Debugger.set_debugger_client(DebuggerClient(REMOTE_DEBUG_SERVER_HOST, REMOTE_DEBUG_SERVER_PORT))
 
 # Run a development server
-import app
-
-app = app.initialize_app()
+from app import app
 
 def run():
     print('run called...')

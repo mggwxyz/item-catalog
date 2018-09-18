@@ -24,7 +24,6 @@ class BaseConfig:
     SECRET_KEY = "secret"
     TESTING = False
     ENVIRONMENT = 'development'
-    #
 
 
 class DevelopmentConfig(BaseConfig):
