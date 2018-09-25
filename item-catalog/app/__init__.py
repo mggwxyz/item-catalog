@@ -31,7 +31,7 @@ from app.auth import models
 from app.categories import models
 from app.items import models
 
-db.drop_all()
+# db.drop_all()
 db.create_all()
 
 # def initialize_app(script_info=None):

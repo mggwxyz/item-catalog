@@ -10,6 +10,7 @@ class Category(Base):
     name = db.Column(db.String(250), nullable=False)
     description = db.Column(db.String(250), nullable=True)
     user_profile_id = db.Column(db.Integer, db.ForeignKey('user_profile.id'), nullable=False)
+    user_profile = db.relationship('UserProfile', backref=db.backref('category', lazy=True))
     # user_profile = db.relationship(UserProfile)
     # user_profile = db.Column(db.Integer)
     # # user = db.relationship(User)

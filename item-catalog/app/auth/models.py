@@ -14,13 +14,13 @@ class UserProfile(Base):
     id = db.Column(db.Integer, primary_key=True)
     # username = db.Column(db.String(32), index=True)
     # password = db.Column(db.String(64))
-    google_id = db.Column(db.String(20))
-    facebook_id = db.Column(db.String(20))
+    google_id = db.Column(db.String(50))
+    facebook_id = db.Column(db.String(50))
     name = db.Column(db.String(250), nullable=False)
     email = db.Column(db.String(250), nullable=False)
     picture = db.Column(db.String(250))
-    categories = db.relationship('category', backref=db.backref('user_profile', lazy=True))
-    items = db.relationship('item', backref=db.backref('user_profile'), lazy=True)
+    # categories = db.relationship('category', backref=db.backref('user_profile', lazy=True))
+    # items = db.relationship('item', backref=db.backref('user_profile'), lazy=True)
 
     # New instance instantiation procedure
     def __init__(self, google_id, facebook_id, name, email, picture):

@@ -1,6 +1,8 @@
 from flask import Blueprint, session as login_session, render_template, redirect
+from app.auth.util import login_required
 
 main = Blueprint('main', __name__)
+
 
 # App controllers
 @main.errorhandler(404)
@@ -9,10 +11,13 @@ def not_found(error):
 
 
 @main.route("/")
-@main.route("/welcome")
+@login_required
 def index():
-    return render_template('index.html')
+    return redirect('/dashboard')
+
 
 @main.route("/dashboard")
+@login_required
 def dashboard():
+    print(login_session)
     return render_template('dashboard.html', login_session=login_session)

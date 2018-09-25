@@ -16,12 +16,14 @@ import requests
 
 # Import the database object from the main app module
 from app import db, CLIENT_ID, SECRETS_PATH
+from app.auth.models import UserProfile
 
 # Import module models (i.e. User)
 # from app.auth.models import User
 
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
 auth = Blueprint('auth', __name__)
+
 
 # Create a anti-forgery state token
 @auth.route('/login')
@@ -63,7 +65,7 @@ def gconnect():
         #     raise ValueError('Wrong hosted domain.')
 
         # ID token is valid. Get the user's Google Account ID from the decoded token.
-        userid = idinfo['sub']
+        google_id = idinfo['sub']
 
     except ValueError as e:
         # Invalid token
@@ -136,27 +138,22 @@ def gconnect():
     login_session['name'] = idinfo['name']
     login_session['picture'] = idinfo['picture']
     login_session['email'] = idinfo['email']
+    login_session['google_id'] = google_id
 
     # Add provider to login session
     login_session['provider'] = 'google'
     #
     # # see if user exists, if it doesn't make a new one
-    # user_id = getUserID(data["email"])
-    # if not user_id:
-    #     user_id = createUser(login_session)
-    # login_session['user_id'] = user_id
+    user = getUserInfoByGoogleId(google_id)
+    if not user:
+        user = createUser(login_session)
+    login_session['user_id'] = user.id
 
     # return redirect(url_for('dashboard'))
-    output = ''
-    output += '<h1>Welcome, '
-    output += login_session['name']
-    output += '!</h1>'
-    output += '<img src="'
-    output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-    return output
-    # flash("you are now logged in as %s" % login_session['username'])
-    # print("done!")
+    response = make_response(json.dumps('Successfully logged in.'), 200)
+    response.headers['Content-Type'] = 'application/json'
+    return response
+
 
 
 @auth.route('/gdisconnect')
@@ -310,18 +307,32 @@ def disconnect():
 
 
 def createUser(login_session):
-    newUser = User(name=login_session['username'], email=login_session[
-                   'email'], picture=login_session['picture'])
-    session.add(newUser)
-    session.commit()
-    user = session.query(User).filter_by(email=login_session['email']).one()
-    return user.id
+
+
+    newUser = UserProfile(
+        name=login_session['name'],
+        email=login_session[ 'email'],
+        picture=login_session['picture'],
+        google_id=login_session['google_id'],
+        facebook_id=None
+    )
+    db.session.add(newUser)
+    db.session.commit()
+    user = db.session.query(UserProfile).filter_by(google_id=login_session['google_id']).one()
+    return user
 
 
 def getUserInfo(user_id):
-    user = session.query(User).filter_by(id=user_id).one()
-    return user
+    try:
+        user = db.session.query(UserProfile).filter_by(id=user_id).one()
+        return user
+    except Exception:
+        return None
 
+
+def getUserInfoByGoogleId(google_id):
+    user = db.session.query(UserProfile).filter_by(google_id=google_id).first()
+    return user
 
 def getUserID(email):
     try:
