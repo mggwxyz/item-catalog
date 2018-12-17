@@ -10,7 +10,7 @@ def run():
     print('run called...')
     app.secret_key = 'super_secret_key'
     # app.run(host='0.0.0.0', port=8000, debug=True)
-    app.run(host='0.0.0.0', port=8000, debug=True, ssl_context='adhoc')
+    app.run(host='0.0.0.0', port=8000, debug=True, threaded=True)
 
 if __name__ == '__main__':
     run()

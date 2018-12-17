@@ -2,6 +2,7 @@ version: '3'
 services:
   # PostgreSQL service
   postgres:
+    restart: always
     # Use postgres version 10 image
     image: postgres:10
     # Set environment variables used by the service. Configure db user, password, and name
@@ -17,8 +18,10 @@ services:
       - "5432:5432"
   # Item Catalog Flask App
   app:
+    restart: always
     # Define build parameters
     build: ./item-catalog
+    image: item-catalog
     ports:
      - "8000:8000"
     volumes:

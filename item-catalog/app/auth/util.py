@@ -1,6 +1,7 @@
 from flask import session, redirect, url_for, flash
 from functools import wraps
 
+
 def check_login():
     if 'username' not in session:
         return redirect(url_for('auth.show_login'))

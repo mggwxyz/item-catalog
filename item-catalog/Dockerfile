@@ -15,6 +15,9 @@ WORKDIR /app
 # Copy host files into app directory
 COPY . /app
 
+# Update python package manager
+RUN pip3 install --upgrade pip
+
 # Install python project dependencies
 RUN pip3 install --no-cache-dir -r requirements.txt
 

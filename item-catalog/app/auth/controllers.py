@@ -25,13 +25,20 @@ from app.auth.models import UserProfile
 auth = Blueprint('auth', __name__)
 
 
-# Create a anti-forgery state token
+# Create a anti-forgery state token and display login page
 @auth.route('/login')
 def show_login():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in range(32))
     login_session['state'] = state
     return render_template('login.html', STATE=state)
+
+
+# Log user out of session and re-display login page
+@auth.route('/logout')
+def logout():
+    login_session.pop('user_id', None)
+    return redirect(url_for('auth.show_login'))
 
 
 @auth.route('/gconnect', methods=['POST'])
@@ -52,17 +59,8 @@ def gconnect():
                                               google.auth.transport.requests.Request(),
                                               CLIENT_ID)
 
-        # Or, if multiple clients access the backend server:
-        # idinfo = id_token.verify_oauth2_token(token, requests.Request())
-        # if idinfo['aud'] not in [CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]:
-        #     raise ValueError('Could not verify audience.')
-
         if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
             raise ValueError('Wrong issuer.')
-
-        # If auth request is from a G Suite domain:
-        # if idinfo['hd'] != GSUITE_DOMAIN_NAME:
-        #     raise ValueError('Wrong hosted domain.')
 
         # ID token is valid. Get the user's Google Account ID from the decoded token.
         google_id = idinfo['sub']
@@ -146,14 +144,13 @@ def gconnect():
     # # see if user exists, if it doesn't make a new one
     user = getUserInfoByGoogleId(google_id)
     if not user:
-        user = createUser(login_session)
+        user = create_user(login_session)
     login_session['user_id'] = user.id
 
     # return redirect(url_for('dashboard'))
     response = make_response(json.dumps('Successfully logged in.'), 200)
     response.headers['Content-Type'] = 'application/json'
     return response
-
 
 
 @auth.route('/gdisconnect')
@@ -254,7 +251,7 @@ def fbconnect():
     # see if user exists
     user_id = getUserID(login_session['email'])
     if not user_id:
-        user_id = createUser(login_session)
+        user_id = create_user(login_session)
     login_session['user_id'] = user_id
 
     output = ''
@@ -306,7 +303,7 @@ def disconnect():
         return redirect(url_for('login'))
 
 
-def createUser(login_session):
+def create_user(login_session):
 
 
     newUser = UserProfile(
@@ -333,6 +330,7 @@ def getUserInfo(user_id):
 def getUserInfoByGoogleId(google_id):
     user = db.session.query(UserProfile).filter_by(google_id=google_id).first()
     return user
+
 
 def getUserID(email):
     try:

@@ -50,7 +50,7 @@ textarea {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
+	justify-content: center;
     box-shadow: 11px 16px 20px 19px #888888;
 }
 
@@ -223,3 +223,14 @@ textarea {
 	display: none;
 }
 
+.nav-login-button {
+	margin-right: 1rem;
+	padding: 0.5rem;
+	color: white;
+	font-weight: bold;
+	align-self: center;
+	position: absolute;
+	right: 0;
+	border: white 1px solid;
+	border-radius: 4px;
+}

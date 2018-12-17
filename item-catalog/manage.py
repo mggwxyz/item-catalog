@@ -2,7 +2,7 @@
 
 from flask.cli import FlaskGroup
 
-from app import initialize_app, db
+# from app import initialize_app, db
 
 # app = initialize_app()
 # cli = FlaskGroup(create_app=initialize_app)

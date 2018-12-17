@@ -24,6 +24,12 @@
     <nav class="navigation">
         {% block navigation %}
             <a class="navigation-brand" href="{{ url_for('main.index') }}">Item Catalog</a>
+	    
+		    {% if session['user_id'] %}
+		        <a class="nav-login-button" href="/logout">Logout</a>
+		    {% else %}
+		        <a class="nav-login-button" href="/login">Login</a>
+		    {% endif %}
         {% endblock %}
     </nav>
     <main class="main">
