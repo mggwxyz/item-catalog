@@ -28,5 +28,5 @@ class BaseConfig:
 
 class DevelopmentConfig(BaseConfig):
     ENVIRONMENT = 'development'
-    REMOTE_DEBUG_SERVER_HOST = '0.0.0.0'
+    REMOTE_DEBUG_SERVER_HOST = '192.168.1.17'
     REMOTE_DEBUG_SERVER_PORT = '4.4.4.4'

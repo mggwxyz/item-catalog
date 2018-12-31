@@ -9,7 +9,8 @@ def check_login():
 def login_required(fn):
     @wraps(fn)
     def wrapper(*args, **kwargs):
-        if session['user_id']:
+        print(session)
+        if 'user_id' in session:
             return fn(*args, **kwargs)
         else:
             return redirect(url_for('auth.show_login'))
