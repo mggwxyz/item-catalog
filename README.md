@@ -1,3 +1,5 @@
+> **Archived 2026-07** — Udacity full-stack nanodegree project.
+
 # Item Catalog
 
 Requires docker
